@@ -1,5 +1,7 @@
 package moc.lab.pages;
 
+import ej.components.dependencyinjection.ServiceLoaderFactory;
+import ej.exit.ExitHandler;
 import ej.widget.basic.Button;
 import ej.widget.container.Split;
 import ej.widget.listener.OnClickListener;
@@ -9,7 +11,7 @@ import ej.widget.navigation.page.Page;
  *
  */
 public class MainPage extends Page {
-	Button bt1 = new Button("Coucou");
+	Button bt1 = new Button("Coucou KKO !");
 	Button bt2 = new Button("Exit");
 	Split split = new Split(false, 0.75f);
 
@@ -28,7 +30,12 @@ public class MainPage extends Page {
 		this.bt2.addOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick() {
-				System.out.println("Exit !");
+				System.out.println("Exit");
+				ExitHandler exitHandler = ServiceLoaderFactory.getServiceLoader().getService(ExitHandler.class);
+				if (exitHandler != null) {
+					exitHandler.exit();
+				}
+
 			}
 		});
 
