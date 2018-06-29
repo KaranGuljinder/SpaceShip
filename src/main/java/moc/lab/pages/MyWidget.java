@@ -122,19 +122,24 @@ public class MyWidget extends StyledWidget {
 
 			}
 		}
-		if (this.aleatoireMouvX < imageX + 3 && this.meteoriteY > imageY - 3) {
+		if (this.aleatoireMouvX < imageX + 10 && this.aleatoireMouvX > imageX - 10 && this.meteoriteY < imageY + 10
+				&& this.meteoriteY > imageY - 10) {
 			this.t.cancel();
 			g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
 					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 
 		}
-		if (this.aleatoireMouvX + this.betweenMeteorite < imageX + 3 && this.meteoriteY > imageY - 3) {
+		if (this.aleatoireMouvX + this.betweenMeteorite < imageX + 10
+				&& this.aleatoireMouvX + this.betweenMeteorite > imageX - 10 && this.meteoriteY < imageY + 10
+				&& this.meteoriteY > imageY - 10) {
 			this.t.cancel();
 			g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
 					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		}
 
-		if (this.aleatoireMouvX - this.betweenMeteorite2 < imageX + 3 && this.meteoriteY > imageY - 3) {
+		if (this.aleatoireMouvX - this.betweenMeteorite2 < imageX + 10
+				&& this.aleatoireMouvX - this.betweenMeteorite2 > imageX - 10 && this.meteoriteY < imageY + 10
+				&& this.meteoriteY > imageY - 10) {
 			System.out.println("Collision");
 			this.t.cancel();
 			g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
