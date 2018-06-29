@@ -1,7 +1,5 @@
 package moc.lab.pages;
 
-import ej.components.dependencyinjection.ServiceLoaderFactory;
-import ej.exit.ExitHandler;
 import ej.widget.basic.Button;
 import ej.widget.container.List;
 import ej.widget.listener.OnClickListener;
@@ -19,6 +17,11 @@ public class MainPage extends Page {
 
 	public static void gamePage() {
 		MyActivity.transition.show(new GamePage(), false);
+
+	}
+
+	public static void highscorePage() {
+		MyActivity.transition.show(new HighScorePage(), false);
 
 	}
 
@@ -41,11 +44,12 @@ public class MainPage extends Page {
 		this.bt2.addOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick() {
-				System.out.println("Exit");
-				ExitHandler exitHandler = ServiceLoaderFactory.getServiceLoader().getService(ExitHandler.class);
-				if (exitHandler != null) {
-					exitHandler.exit();
-				}
+				/*
+				 * System.out.println("Exit"); ExitHandler exitHandler =
+				 * ServiceLoaderFactory.getServiceLoader().getService(ExitHandler.class); if (exitHandler != null) {
+				 * exitHandler.exit(); }
+				 */
+				MainPage.highscorePage();
 
 			}
 		});

@@ -22,14 +22,15 @@ public class MyWidget extends StyledWidget {
 	public static int imageY;
 	public int meteoriteY;
 	public int meteoriteX;
-	private Image background, gameOver, microejImage;
+	private Image background, gameOver, microejImage, spaceship, meteorite;
 	int hideMeteorite = 0;
 	public static int spaceMouv = 0;
-	public static Image spaceship;
-	public static Image meteorite;
 	public int aleatoireX = 0;
 	public int aleatoireY = 0;
 	public int aleatoireMouvX = 0;
+	public int compteur = 0;
+	public static String score;
+	public static String scoreDisplay;
 	public int betweenMeteorite = 0;
 	public int betweenMeteorite2 = 0;
 	public int positionX[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -40,7 +41,6 @@ public class MyWidget extends StyledWidget {
 	int horizontalIncrement = this.ABSOLUTE_INCREMENT;
 	Timer t = new Timer();
 
-	// private final int event = 50528512;
 	private static final int ANIMATION_PERIOD = 10; // in ms - 60 frames per second
 	static Display display = Display.getDefaultDisplay();
 
@@ -50,9 +50,7 @@ public class MyWidget extends StyledWidget {
 			this.spaceship = Image.createImage("/images/ship.png");
 			this.meteorite = Image.createImage("/images/meteorite.png");
 			this.gameOver = Image.createImage("/images/over.png");
-
 			int animatedImageHalfHeight = display.getHeight();
-			System.out.println("Height : " + animatedImageHalfHeight);
 			this.imageX = this.display.getWidth() / 2 - this.spaceship.getWidth() / 2;
 			this.imageY = this.display.getHeight() / 2 - this.spaceship.getHeight() / 2;
 			this.bottomLimit = animatedImageHalfHeight;
@@ -65,11 +63,18 @@ public class MyWidget extends StyledWidget {
 			e.printStackTrace();
 		}
 
+		if (GamePage.isButtonPressed == true) {
+			Timer t = new Timer();
+		}
 		this.t.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
+				System.out.println(spaceMouv);
+				GamePage.isButtonPressed = false;
+				MyWidget.this.score = " Score : " + String.valueOf(MyWidget.this.compteur);
+				scoreDisplay = String.valueOf(MyWidget.this.compteur);
 				MyWidget.this.meteoriteY += MyWidget.this.verticalIncrement;
 				MyWidget.this.aleatoireMouvX += MyWidget.this.horizontalIncrement;
 				if (MyWidget.this.meteoriteY < MyWidget.this.bottomLimit) {
@@ -89,26 +94,25 @@ public class MyWidget extends StyledWidget {
 	}
 
 	public void displayMeteorite(GraphicsContext g, int max) {
-		for (int i = 0; i < max; i++) {
-			if (spaceMouv == 0) {
-				this.aleatoireX = 0 + (int) (Math.random() * ((400 - 0) + 1));
-				this.aleatoireY = 0 + (int) (Math.random() * ((250 - 0) + 1));
-				this.positionX[i] = this.aleatoireX;
-				this.positionY[i] = this.aleatoireY;
-
-			}
-			g.drawImage(this.meteorite, this.positionX[i], this.positionY[i],
-					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
-		}
-	}
-
-	public void displayMeteoriteMouvement(GraphicsContext g, int max) {
 		g.drawImage(this.meteorite, this.aleatoireMouvX, this.meteoriteY,
 				GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		g.drawImage(this.meteorite, this.aleatoireMouvX + this.betweenMeteorite, this.meteoriteY,
 				GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		g.drawImage(this.meteorite, this.aleatoireMouvX - this.betweenMeteorite2, this.meteoriteY,
 				GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+
+		for (int i = 0; i < max; i++) {
+			if (spaceMouv == 0) {
+				this.aleatoireX = 0 + (int) (Math.random() * ((400 - 0) + 1));
+				this.aleatoireY = 0 + (int) (Math.random() * ((250 - 0) + 1));
+				this.positionX[i] = this.aleatoireX;
+				this.positionY[i] = this.aleatoireY;
+				System.out.println("X : " + this.positionX[i]);
+
+			}
+			g.drawImage(this.meteorite, this.positionX[i], this.positionY[i],
+					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+		}
 
 	}
 
@@ -140,7 +144,6 @@ public class MyWidget extends StyledWidget {
 		if (this.aleatoireMouvX - this.betweenMeteorite2 < imageX + 10
 				&& this.aleatoireMouvX - this.betweenMeteorite2 > imageX - 10 && this.meteoriteY < imageY + 10
 				&& this.meteoriteY > imageY - 10) {
-			System.out.println("Collision");
 			this.t.cancel();
 			g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
 					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
@@ -150,18 +153,17 @@ public class MyWidget extends StyledWidget {
 	@Override
 	public void renderContent(GraphicsContext g, Style style, Rectangle bounds) {
 		// TODO Auto-generated method stub
-		System.out.println("X : " + imageX + " Y :" + imageY);
-		System.out.println("Meteorite ----- X : " + this.aleatoireMouvX + " Y :" + this.meteoriteY);
 
 		g.drawImage(this.background, 0, 0, GraphicsContext.TOP | GraphicsContext.LEFT);
 		g.drawImage(this.background, 200, 0, GraphicsContext.TOP | GraphicsContext.LEFT);
 		g.drawImage(this.background, 0, 200, GraphicsContext.TOP | GraphicsContext.LEFT);
 		g.drawImage(this.background, 200, 200, GraphicsContext.TOP | GraphicsContext.LEFT);
 		g.drawImage(this.spaceship, imageX, imageY, GraphicsContext.VCENTER | GraphicsContext.HCENTER);
-		displayMeteoriteMouvement(g, 3);
 		displayMeteorite(g, 10);
+		g.drawString(this.score, 450, 5, GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		spaceMouv = 1;
 		collision(g);
+		this.compteur++;
 
 	}
 

@@ -7,13 +7,12 @@ import ej.mwt.Desktop;
 import ej.mwt.MWT;
 import ej.mwt.Panel;
 import ej.style.Stylesheet;
-import ej.style.border.SimpleRectangularBorder;
-import ej.style.outline.SimpleOutline;
 import ej.style.selector.TypeSelector;
 import ej.style.util.EditableStyle;
 import ej.style.util.StyleHelper;
 import ej.wadapps.app.Activity;
 import ej.widget.basic.Button;
+import ej.widget.basic.Label;
 import ej.widget.container.transition.SlideScreenshotTransitionContainer;
 import ej.widget.container.transition.TransitionContainer;
 import moc.lab.pages.MainPage;
@@ -29,15 +28,12 @@ public class MyActivity implements Activity {
 		Stylesheet sts = StyleHelper.getStylesheet();
 		EditableStyle st1 = new EditableStyle();
 
-		st1.setMargin(new SimpleOutline(5));
-		st1.setPadding(new SimpleOutline(5));
-		st1.setBorder(new SimpleRectangularBorder(3));
-		st1.setBorderColor(Colors.MAGENTA);
-		st1.setBackgroundColor(Colors.NAVY);
+		st1.setBackgroundColor(Colors.BLACK);
 		st1.setAlignment(GraphicsContext.VCENTER | GraphicsContext.HCENTER);
-		st1.setForegroundColor(Colors.YELLOW);
+		st1.setForegroundColor(Colors.GRAY);
 
 		sts.addRule(new TypeSelector(Button.class), st1);
+		sts.addRule(new TypeSelector(Label.class), st1);
 	}
 
 	@Override
