@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Application-Id: KKO1
+Application-Id: KGU1
 Application-Version: 0.1.0
-Application-PrintableName: KKO1
-Application-Description: KKO1
+Application-PrintableName: KGU1
+Application-Description: KGU1
 Application-IconsDirectory: icons
 Application-Activities: moc.lab.MyActivity
