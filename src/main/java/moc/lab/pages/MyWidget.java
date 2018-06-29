@@ -22,8 +22,7 @@ public class MyWidget extends StyledWidget {
 	public static int imageY;
 	public int meteoriteY;
 	public int meteoriteX;
-	private Image microejImage;
-	private Image background;
+	private Image background, gameOver, microejImage;
 	int hideMeteorite = 0;
 	public static int spaceMouv = 0;
 	public static Image spaceship;
@@ -39,6 +38,7 @@ public class MyWidget extends StyledWidget {
 	int ABSOLUTE_INCREMENT = 2;
 	int verticalIncrement = this.ABSOLUTE_INCREMENT;
 	int horizontalIncrement = this.ABSOLUTE_INCREMENT;
+	Timer t = new Timer();
 
 	// private final int event = 50528512;
 	private static final int ANIMATION_PERIOD = 10; // in ms - 60 frames per second
@@ -49,6 +49,8 @@ public class MyWidget extends StyledWidget {
 			this.background = Image.createImage("/images/space.png");
 			this.spaceship = Image.createImage("/images/ship.png");
 			this.meteorite = Image.createImage("/images/meteorite.png");
+			this.gameOver = Image.createImage("/images/over.png");
+
 			int animatedImageHalfHeight = display.getHeight();
 			System.out.println("Height : " + animatedImageHalfHeight);
 			this.imageX = this.display.getWidth() / 2 - this.spaceship.getWidth() / 2;
@@ -63,8 +65,7 @@ public class MyWidget extends StyledWidget {
 			e.printStackTrace();
 		}
 
-		Timer t = new Timer();
-		t.schedule(new TimerTask() {
+		this.t.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
@@ -94,40 +95,68 @@ public class MyWidget extends StyledWidget {
 				this.aleatoireY = 0 + (int) (Math.random() * ((250 - 0) + 1));
 				this.positionX[i] = this.aleatoireX;
 				this.positionY[i] = this.aleatoireY;
+
 			}
 			g.drawImage(this.meteorite, this.positionX[i], this.positionY[i],
-					GraphicsContext.TOP | GraphicsContext.LEFT);
+					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		}
 	}
 
 	public void displayMeteoriteMouvement(GraphicsContext g, int max) {
-		g.drawImage(this.meteorite, this.aleatoireMouvX, this.meteoriteY, GraphicsContext.TOP | GraphicsContext.LEFT);
+		g.drawImage(this.meteorite, this.aleatoireMouvX, this.meteoriteY,
+				GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		g.drawImage(this.meteorite, this.aleatoireMouvX + this.betweenMeteorite, this.meteoriteY,
-				GraphicsContext.TOP | GraphicsContext.LEFT);
+				GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		g.drawImage(this.meteorite, this.aleatoireMouvX - this.betweenMeteorite2, this.meteoriteY,
-				GraphicsContext.TOP | GraphicsContext.LEFT);
+				GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 
 	}
 
-	public void collision() {
+	public void collision(GraphicsContext g) {
 		for (int i = 0; i < 10; i++) {
-			if (this.positionX[i] == imageX && this.positionY[i] == imageY) {
-				System.out.println("Collision");
+			if (this.positionX[i] < imageX + 10 && this.positionX[i] > imageX - 10 && this.positionY[i] < imageY + 10
+					&& this.positionY[i] > imageY - 10) {
+				this.t.cancel();
+				g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
+						GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+
 			}
+		}
+		if (this.aleatoireMouvX < imageX + 3 && this.meteoriteY > imageY - 3) {
+			this.t.cancel();
+			g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
+					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+
+		}
+		if (this.aleatoireMouvX + this.betweenMeteorite < imageX + 3 && this.meteoriteY > imageY - 3) {
+			this.t.cancel();
+			g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
+					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+		}
+
+		if (this.aleatoireMouvX - this.betweenMeteorite2 < imageX + 3 && this.meteoriteY > imageY - 3) {
+			System.out.println("Collision");
+			this.t.cancel();
+			g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
+					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		}
 	}
 
 	@Override
 	public void renderContent(GraphicsContext g, Style style, Rectangle bounds) {
 		// TODO Auto-generated method stub
+		System.out.println("X : " + imageX + " Y :" + imageY);
+		System.out.println("Meteorite ----- X : " + this.aleatoireMouvX + " Y :" + this.meteoriteY);
+
 		g.drawImage(this.background, 0, 0, GraphicsContext.TOP | GraphicsContext.LEFT);
 		g.drawImage(this.background, 200, 0, GraphicsContext.TOP | GraphicsContext.LEFT);
 		g.drawImage(this.background, 0, 200, GraphicsContext.TOP | GraphicsContext.LEFT);
 		g.drawImage(this.background, 200, 200, GraphicsContext.TOP | GraphicsContext.LEFT);
-		g.drawImage(this.spaceship, imageX, imageY, GraphicsContext.TOP | GraphicsContext.LEFT);
+		g.drawImage(this.spaceship, imageX, imageY, GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		displayMeteoriteMouvement(g, 3);
 		displayMeteorite(g, 10);
 		spaceMouv = 1;
+		collision(g);
 
 	}
 
