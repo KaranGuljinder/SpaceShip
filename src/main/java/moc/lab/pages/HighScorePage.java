@@ -12,6 +12,7 @@ import ej.widget.container.List;
 import ej.widget.listener.OnClickListener;
 import ej.widget.navigation.page.Page;
 import moc.lab.MyActivity;
+import moc.lab.MyWidget;
 
 /**
  *

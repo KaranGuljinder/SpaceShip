@@ -1,4 +1,4 @@
-package moc.lab.pages;
+package moc.lab;
 
 import java.io.IOException;
 
@@ -12,6 +12,8 @@ import ej.microui.event.generator.Pointer;
 import ej.style.Style;
 import ej.style.container.Rectangle;
 import ej.widget.StyledWidget;
+import moc.lab.pages.GamePage;
+import moc.lab.pages.LevelPage;
 
 /**
  * A personalised widget.
@@ -33,6 +35,8 @@ public class MyWidget extends StyledWidget {
 	public static String scoreDisplay;
 	public int betweenMeteorite = 0;
 	public int betweenMeteorite2 = 0;
+	public int betweenMeteorite3 = 0;
+	public int betweenMeteorite4 = 0;
 	public int positionX[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	public int positionY[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	private int bottomLimit = 0;
@@ -41,11 +45,19 @@ public class MyWidget extends StyledWidget {
 	int horizontalIncrement = this.ABSOLUTE_INCREMENT;
 	Timer t = new Timer();
 
-	private static final int ANIMATION_PERIOD = 10; // in ms - 60 frames per second
+	public static int ANIMATION_PERIOD = 10; // in ms - 60 frames per second
 	static Display display = Display.getDefaultDisplay();
 
 	public MyWidget() {
 		try {
+
+			if (LevelPage.level == 1) {
+				ANIMATION_PERIOD = 10;
+			} else if (LevelPage.level == 2) {
+				ANIMATION_PERIOD = 6;
+			} else if (LevelPage.level == 3) {
+				ANIMATION_PERIOD = 4;
+			}
 			this.background = Image.createImage("/images/space.png");
 			this.spaceship = Image.createImage("/images/ship.png");
 			this.meteorite = Image.createImage("/images/meteorite.png");
@@ -71,12 +83,12 @@ public class MyWidget extends StyledWidget {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				System.out.println(spaceMouv);
 				GamePage.isButtonPressed = false;
 				MyWidget.this.score = " Score : " + String.valueOf(MyWidget.this.compteur);
 				scoreDisplay = String.valueOf(MyWidget.this.compteur);
 				MyWidget.this.meteoriteY += MyWidget.this.verticalIncrement;
 				MyWidget.this.aleatoireMouvX += MyWidget.this.horizontalIncrement;
+
 				if (MyWidget.this.meteoriteY < MyWidget.this.bottomLimit) {
 					MyWidget.this.verticalIncrement = MyWidget.this.ABSOLUTE_INCREMENT;
 					MyWidget.this.horizontalIncrement = MyWidget.this.ABSOLUTE_INCREMENT;
@@ -85,6 +97,8 @@ public class MyWidget extends StyledWidget {
 					MyWidget.this.aleatoireMouvX = 0 + (int) (Math.random() * ((400 - 0) + 1));
 					MyWidget.this.betweenMeteorite = 0 + (int) (Math.random() * ((150 - 0) + 1));
 					MyWidget.this.betweenMeteorite2 = 0 + (int) (Math.random() * ((150 - 0) + 1));
+					MyWidget.this.betweenMeteorite3 = 0 + (int) (Math.random() * ((100 - 0) + 1));
+					MyWidget.this.betweenMeteorite4 = 0 + (int) (Math.random() * ((100 - 0) + 1));
 				}
 
 				repaint();
@@ -100,6 +114,17 @@ public class MyWidget extends StyledWidget {
 				GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		g.drawImage(this.meteorite, this.aleatoireMouvX - this.betweenMeteorite2, this.meteoriteY,
 				GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+		if (LevelPage.level == 2) {
+			g.drawImage(this.meteorite, this.aleatoireMouvX + this.betweenMeteorite2 + this.betweenMeteorite3,
+					this.meteoriteY, GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+		}
+		if (LevelPage.level == 3) {
+			g.drawImage(this.meteorite, this.aleatoireMouvX + this.betweenMeteorite2 + this.betweenMeteorite3,
+					this.meteoriteY, GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+			g.drawImage(this.meteorite, this.aleatoireMouvX + this.betweenMeteorite2 - this.betweenMeteorite4,
+					this.meteoriteY, GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+
+		}
 
 		for (int i = 0; i < max; i++) {
 			if (spaceMouv == 0) {
@@ -107,7 +132,6 @@ public class MyWidget extends StyledWidget {
 				this.aleatoireY = 0 + (int) (Math.random() * ((250 - 0) + 1));
 				this.positionX[i] = this.aleatoireX;
 				this.positionY[i] = this.aleatoireY;
-				System.out.println("X : " + this.positionX[i]);
 
 			}
 			g.drawImage(this.meteorite, this.positionX[i], this.positionY[i],
@@ -148,6 +172,36 @@ public class MyWidget extends StyledWidget {
 			g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
 					GraphicsContext.VCENTER | GraphicsContext.HCENTER);
 		}
+
+		if (LevelPage.level == 2) {
+			if (this.aleatoireMouvX + this.betweenMeteorite2 + this.betweenMeteorite3 < imageX + 10
+					&& this.aleatoireMouvX - this.betweenMeteorite2 + this.betweenMeteorite3 > imageX - 10
+					&& this.meteoriteY < imageY + 10 && this.meteoriteY > imageY - 10) {
+				this.t.cancel();
+				g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
+						GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+			}
+		}
+
+		if (LevelPage.level == 3) {
+
+			if (this.aleatoireMouvX + this.betweenMeteorite2 - this.betweenMeteorite4 < imageX + 10
+					&& this.aleatoireMouvX - this.betweenMeteorite2 - this.betweenMeteorite4 > imageX - 10
+					&& this.meteoriteY < imageY + 10 && this.meteoriteY > imageY - 10) {
+				this.t.cancel();
+				g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
+						GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+			}
+
+			if (this.aleatoireMouvX + this.betweenMeteorite2 + this.betweenMeteorite3 < imageX + 10
+					&& this.aleatoireMouvX - this.betweenMeteorite2 + this.betweenMeteorite3 > imageX - 10
+					&& this.meteoriteY < imageY + 10 && this.meteoriteY > imageY - 10) {
+				this.t.cancel();
+				g.drawImage(this.gameOver, display.getWidth() / 2, display.getHeight() / 2,
+						GraphicsContext.VCENTER | GraphicsContext.HCENTER);
+			}
+		}
+
 	}
 
 	@Override
